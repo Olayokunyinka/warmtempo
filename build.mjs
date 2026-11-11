@@ -29,7 +29,7 @@ const turnstileKey = process.env.TURNSTILE_SITE_KEY || '';
 const vars = {
   url: site.url, legalName: site.legalName, email: site.email, handle: site.handle,
   street: a.street, city: a.city, region: a.region, postal: a.postal, countryName: a.countryName,
-  year, cssFile, jsFile,
+  year, cssFile, jsFile, ga4: site.ga4,
   addressLine: `${a.street}, ${a.city}, ${a.region} ${a.postal}, ${a.countryName}`,
   socialLinks: site.socials.map((s) => `<li><a href="${esc(s.url)}" rel="me noopener" target="_blank">${esc(s.name)}<span class="sr"> (opens in a new tab)</span></a></li>`).join(''),
   turnstile: turnstileKey ? `<div class="cf-turnstile" data-sitekey="${esc(turnstileKey)}" data-appearance="interaction-only"></div>` : '',

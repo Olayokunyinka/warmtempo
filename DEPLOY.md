@@ -40,6 +40,6 @@ Pages project -> Custom domains -> add `warmtempo.com` (apex). Then redirect www
 
 ## 6. After launch
 - Google Search Console: add `https://warmtempo.com` as a URL-prefix property, submit `/sitemap.xml`. Bing Webmaster Tools: import from Search Console.
-- Google Analytics: GA4 property `G-EW3BEJ1QB8` receives data only from visitors who click Accept on the cookie notice.
+- Google Analytics: GA4 property `G-EW3BEJ1QB8` uses Consent Mode: the tag loads for everyone (so Google can detect it) but sets no cookies until a visitor clicks Accept. Check Reports -> Realtime after visiting the site.
 - Verify: `curl -s https://warmtempo.com/ | head`, https://search.google.com/test/rich-results, https://validator.schema.org
 - Test the form once with your own email and confirm: row in D1, acknowledgement email, notification email.

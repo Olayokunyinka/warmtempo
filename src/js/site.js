@@ -8,28 +8,25 @@
   try { rm = w.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
   if (rm) root.classList.add('rm');
 
-  /* ---------- analytics consent (GA4 loads only after Accept) ---------- */
+  /* ---------- analytics: Google Analytics with Consent Mode (no cookies until Accept) ---------- */
   var GA = '__GA4__';
   var cb = $('#cb');
   function store(v) { try { if (v) localStorage.setItem('wt-consent', v); else return localStorage.getItem('wt-consent'); } catch (e) {} return null; }
-  function loadGA() {
-    if (w.__wtga || !GA) return; w.__wtga = 1;
-    w.dataLayer = w.dataLayer || [];
-    w.gtag = function () { w.dataLayer.push(arguments); };
-    w.gtag('js', new Date()); w.gtag('config', GA);
-    var s = d.createElement('script'); s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA; d.head.appendChild(s);
-  }
-  function showCb() { if (cb) cb.hidden = false; }
+  w.dataLayer = w.dataLayer || [];
+  w.gtag = function () { w.dataLayer.push(arguments); };
+  w.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
   var c = store();
-  if (c === 'yes') loadGA(); else if (!c) showCb();
+  if (c === 'yes') w.gtag('consent', 'update', { analytics_storage: 'granted' });
+  w.gtag('js', new Date()); w.gtag('config', GA);
+  function setConsent(v) { w.gtag('consent', 'update', { analytics_storage: v === 'yes' ? 'granted' : 'denied' }); }
+  function showCb() { if (cb) cb.hidden = false; }
+  if (!c) showCb();
   if (cb) cb.addEventListener('click', function (e) {
     var b = e.target.closest('[data-cb]'); if (!b) return;
-    var v = b.getAttribute('data-cb'); store(v); cb.hidden = true;
-    if (v === 'yes') loadGA();
+    var v = b.getAttribute('data-cb'); store(v); cb.hidden = true; setConsent(v);
   });
   $$('[data-cookie-settings]').forEach(function (b) { b.addEventListener('click', showCb); });
-  function track(name) { try { if (w.gtag && w.__wtga) w.gtag('event', name); } catch (e) {} }
+  function track(name) { try { w.gtag('event', name); } catch (e) {} }
 
   /* ---------- mobile menu ---------- */
   var mb = $('.menu-btn'), nl = $('#primary-links');
