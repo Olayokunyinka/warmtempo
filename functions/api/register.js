@@ -8,6 +8,8 @@
 //   IP_SALT           secret, any long random string
 //   TURNSTILE_SECRET  optional secret (enables bot check when the site key is set at build time)
 
+import { ackEmail, notifyEmail } from '../../lib/emails.js';
+
 const MAX = { firstName: 80, lastName: 80, email: 254, phone: 30, whatsapp: 30, country: 80, interest: 60, platform: 30, type: 30, starting: 30, brief: 1000 };
 const ENUM = {
   interest: ['Managed faceless channel', 'Managed video production', 'Using the platform myself', 'One-on-one consultation', 'Learning YouTube automation', 'Not sure yet'],
@@ -98,20 +100,13 @@ export async function onRequestPost({ request, env, waitUntil }) {
     const name = v.firstName || 'there';
     let ack = 0, note = 0;
     try {
-      await resend(env, {
-        from, to: [v.email], reply_to: replyTo, subject: 'Thanks for reaching out to WarmTempo',
-        text: `Hi ${name},\n\nThanks for sharing what you want to create. We'll review your brief and contact you about the production options and scope available for your project. We'll confirm pricing and terms before any work begins.\n\nRegistering interest is not a purchase, and no payment or commitment is required.\n\nWarmTempo Team\nKeep stories moving.\nhttps://warmtempo.com\n\nYou received this because someone registered interest at warmtempo.com using this email address. If that wasn't you, you can ignore this message or write to hello@warmtempo.com.`,
-        html: `<div style="font-family:Inter,Arial,sans-serif;font-size:16px;line-height:1.6;color:#202736;max-width:560px"><p>Hi ${esc(name)},</p><p>Thanks for sharing what you want to create. We’ll review your brief and contact you about the production options and scope available for your project. We’ll confirm pricing and terms before any work begins.</p><p>Registering interest is not a purchase, and no payment or commitment is required.</p><p><strong>WarmTempo Team</strong><br>Keep stories moving.<br><a href="https://warmtempo.com" style="color:#B14C34">warmtempo.com</a></p><p style="font-size:13px;color:#596073">You received this because someone registered interest at warmtempo.com using this email address. If that wasn’t you, you can ignore this message or write to hello@warmtempo.com.</p></div>`,
-      });
+      const m = ackEmail(v);
+      await resend(env, { from, to: [v.email], reply_to: replyTo, subject: m.subject, html: m.html, text: m.text });
       ack = 1;
     } catch (e) { console.error('ack', e); }
     try {
-      const rows = [['Name', `${v.firstName} ${v.lastName}`.trim()], ['Email', v.email], ['Phone', v.phone], ['WhatsApp', v.whatsapp], ['Country', v.country], ['Interested in', v.interest], ['Platform', v.platform], ['Content type', v.type], ['Starting with', v.starting], ['Marketing updates', marketing ? 'Yes' : 'No'], ['Brief', v.brief]];
-      await resend(env, {
-        from, to: [env.NOTIFY_EMAIL || 'hello@warmtempo.com'], reply_to: v.email, subject: `New WarmTempo registration: ${v.firstName || v.email}`,
-        text: rows.map(([k, x]) => `${k}: ${x || '-'}`).join('\n') + `\n\nLead #${id} · ${now}`,
-        html: `<table style="font-family:Inter,Arial,sans-serif;font-size:15px;border-collapse:collapse">${rows.map(([k, x]) => `<tr><td style="padding:4px 12px 4px 0;color:#596073;vertical-align:top">${esc(k)}</td><td style="padding:4px 0;white-space:pre-wrap">${esc(x) || '-'}</td></tr>`).join('')}</table><p style="font-size:13px;color:#596073">Lead #${id} · ${esc(now)}</p>`,
-      });
+      const m = notifyEmail(v, { id, now, marketing: !!marketing });
+      await resend(env, { from, to: [env.NOTIFY_EMAIL || 'hello@warmtempo.com'], reply_to: v.email, subject: m.subject, html: m.html, text: m.text });
       note = 1;
     } catch (e) { console.error('notify', e); }
     try { await env.DB.prepare('UPDATE leads SET ack_sent=?, notify_sent=? WHERE id=?').bind(ack, note, id).run(); } catch (e) { console.error('flags', e); }
