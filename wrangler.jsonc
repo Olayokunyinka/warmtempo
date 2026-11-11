@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "warmtempo",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "warmtempo-leads", "database_id": "028d7a6d-fff3-48bb-a435-aa83a9146b34" }
+  ],
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}
