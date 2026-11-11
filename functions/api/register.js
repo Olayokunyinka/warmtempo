@@ -94,22 +94,22 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   // emails run after the response so the visitor never waits on them
   const mail = (async () => {
-    if (!env.RESEND_API_KEY) { console.error('RESEND_API_KEY missing'); return; }
+    if (!env.RESEND_API_KEY) { console.error('RESEND_API_KEY missing'); try { await env.DB.prepare('UPDATE leads SET mail_error=? WHERE id=?').bind('RESEND_API_KEY is not set on the Worker', id).run(); } catch {} return; }
     const from = env.FROM_EMAIL || 'WarmTempo <hello@send.warmtempo.com>';
     const replyTo = env.REPLY_TO || 'hello@warmtempo.com';
     const name = v.firstName || 'there';
-    let ack = 0, note = 0;
+    let ack = 0, note = 0; const errs = [];
     try {
       const m = ackEmail(v);
       await resend(env, { from, to: [v.email], reply_to: replyTo, subject: m.subject, html: m.html, text: m.text });
       ack = 1;
-    } catch (e) { console.error('ack', e); }
+    } catch (e) { console.error('ack', e); errs.push('ack: ' + String(e && e.message || e).slice(0, 300)); }
     try {
       const m = notifyEmail(v, { id, now, marketing: !!marketing });
       await resend(env, { from, to: [env.NOTIFY_EMAIL || 'hello@warmtempo.com'], reply_to: v.email, subject: m.subject, html: m.html, text: m.text });
       note = 1;
-    } catch (e) { console.error('notify', e); }
-    try { await env.DB.prepare('UPDATE leads SET ack_sent=?, notify_sent=? WHERE id=?').bind(ack, note, id).run(); } catch (e) { console.error('flags', e); }
+    } catch (e) { console.error('notify', e); errs.push('notify: ' + String(e && e.message || e).slice(0, 300)); }
+    try { await env.DB.prepare('UPDATE leads SET ack_sent=?, notify_sent=?, mail_error=? WHERE id=?').bind(ack, note, errs.join(' | ') || null, id).run(); } catch (e) { console.error('flags', e); }
   })();
   waitUntil(mail);
 
