@@ -1,0 +1,21 @@
+{
+ "name": "WarmTempo",
+ "short_name": "WarmTempo",
+ "description": "Managed video production for creators. Keep stories moving.",
+ "start_url": "/",
+ "display": "browser",
+ "background_color": "#FFF8F0",
+ "theme_color": "#FFF8F0",
+ "icons": [
+  {
+   "src": "/img/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/img/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

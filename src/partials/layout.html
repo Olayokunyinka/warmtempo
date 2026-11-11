@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="robots" content="{{robots}}">
+<link rel="canonical" href="{{canonical}}">
+<meta name="theme-color" content="#FFF8F0">
+<meta property="og:site_name" content="WarmTempo">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="{{ogTitle}}">
+<meta property="og:description" content="{{ogDescription}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:image" content="{{url}}/img/og-warmtempo.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="WarmTempo: Keep stories moving. The Ribbon W logo beside Tempo, the WarmTempo fox.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ogTitle}}">
+<meta name="twitter:description" content="{{ogDescription}}">
+<meta name="twitter:image" content="{{url}}/img/og-warmtempo.jpg">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/{{cssFile}}">
+{{jsonld}}
+</head>
+<body>
+<div class="wt" id="wt">
+<a class="skip" href="#main">Skip to content</a>
+{{>header}}
+<main id="main">
+{{body}}
+</main>
+{{>footer}}
+{{>consent}}
+</div>
+<script src="/assets/{{jsFile}}" defer></script>
+</body>
+</html>

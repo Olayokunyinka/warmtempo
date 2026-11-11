@@ -1,0 +1,21 @@
+{
+  "name": "WarmTempo",
+  "url": "https://warmtempo.com",
+  "legalName": "Lucalvry LLC",
+  "tagline": "Keep stories moving.",
+  "descriptor": "A creator-focused video production platform and service.",
+  "email": "hello@warmtempo.com",
+  "fromEmail": "hello@send.warmtempo.com",
+  "address": { "street": "30 N Gould St, Ste R", "city": "Sheridan", "region": "WY", "postal": "82801", "country": "US", "countryName": "United States" },
+  "ga4": "G-EW3BEJ1QB8",
+  "handle": "usewarmtempo",
+  "socials": [
+    { "name": "Instagram", "url": "https://www.instagram.com/usewarmtempo" },
+    { "name": "Facebook", "url": "https://www.facebook.com/usewarmtempo" },
+    { "name": "X", "url": "https://x.com/usewarmtempo" },
+    { "name": "TikTok", "url": "https://www.tiktok.com/@usewarmtempo" },
+    { "name": "YouTube", "url": "https://www.youtube.com/@usewarmtempo" },
+    { "name": "Threads", "url": "https://www.threads.com/@usewarmtempo" },
+    { "name": "Snapchat", "url": "https://www.snapchat.com/add/usewarmtempo" }
+  ]
+}
